@@ -25,8 +25,11 @@ import colorsys
 from abc import ABCMeta, abstractmethod
 from typing import TYPE_CHECKING, Type, TypeVar
 
-## Bokeh imports
+# Bokeh imports
+from ..core.serialization import Serializable, Serializer
+
 if TYPE_CHECKING:
+    from ..core.types import JSON
     from .hsl import HSL
     from .rgb import RGB
 
@@ -44,12 +47,15 @@ __all__ = (
 
 Self = TypeVar("Self", bound="Color")
 
-class Color(metaclass=ABCMeta):
+class Color(Serializable, metaclass=ABCMeta):
     ''' A base class for representing color objects.
 
     '''
 
     def __repr__(self) -> str:
+        return self.to_css()
+
+    def to_serializable(self, serializer: Serializer) -> JSON:
         return self.to_css()
 
     @staticmethod
